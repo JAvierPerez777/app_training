@@ -22,21 +22,16 @@ class Permisos extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.all(12.0),
                 child: Text(
-                  'Necesitamos acceder a tu ubicacion para mostrarte tus rutas e informacion de tu rendimiento',
+                  '''Necesitamos acceder a tu ubicacion para mostrarte tus rutas e informacion de tu rendimiento''',
                   textAlign: TextAlign.center,
+                  maxLines: 2,
                   style: TextStyle(fontSize: 12),
                 ),
               ),
               const SizedBox(height: 15),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF7E57C2),
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: () {},
-                    child: const Text('Solicitar Permisos')),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Solicitar Permisos'),
               ),
             ],
           ),

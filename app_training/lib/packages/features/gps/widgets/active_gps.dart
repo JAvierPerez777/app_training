@@ -8,20 +8,18 @@ class ActiveGps extends StatelessWidget {
     return const Scaffold(
       body: Center(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
               Icons.gps_off,
-              color: Colors.grey,
+              color: Color(0xFF7E57C2),
               size: 50,
             ),
             SizedBox(height: 30),
             Text(
               'Debes activar tu GPS',
-              style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
           ],
         ),

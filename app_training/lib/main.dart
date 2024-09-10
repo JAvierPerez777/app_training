@@ -1,6 +1,5 @@
-import 'package:app_training/screens/active_gps.dart';
-import 'package:app_training/screens/permisos.dart';
-import 'package:app_training/screens/waiting.dart';
+import 'package:app_training/packages/core/ui/theme.dart';
+import 'package:app_training/packages/features/gps/pages/gps_pages.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -10,9 +9,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Training',
-      home: Waiting(),
+      theme: AppTheme.light,
+      home: const GpsPages(),
     );
   }
 }
