@@ -1,15 +1,21 @@
-import 'package:app_training/packages/features/gps/widgets/active_gps.dart';
-import 'package:app_training/packages/features/gps/widgets/permisos.dart';
+import 'package:app_training/packages/features/gps/bloc/gps_bloc.dart';
+import 'package:app_training/packages/features/gps/widgets/message_.gps.dart';
+import 'package:app_training/packages/features/gps/widgets/permissions_gps.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class GpsPages extends StatelessWidget {
-  const GpsPages({super.key});
+class GpsPage extends StatelessWidget {
+  const GpsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const showPermitir = true;
-    return const Scaffold(
-      body: showPermitir ? Permisos() : ActiveGps(),
+    return Scaffold(
+      body: BlocBuilder<GpsBloc, GpsState>(
+        builder: (context, state) {
+          final isGpsEnabled = state.isGpsEnable;
+          return isGpsEnabled ? const PermissionsGps() : const MessageGps();
+        },
+      ),
     );
   }
 }

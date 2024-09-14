@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ActiveGps extends StatelessWidget {
-  const ActiveGps({super.key});
+class MessageGps extends StatelessWidget {
+  const MessageGps({super.key});
 
   @override
   Widget build(BuildContext context) {
