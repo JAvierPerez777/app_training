@@ -1,6 +1,7 @@
 import 'package:app_training/packages/core/ui/theme.dart';
 import 'package:app_training/packages/features/gps/bloc/gps_bloc.dart';
 import 'package:app_training/packages/features/gps/pages/gps_pages.dart';
+import 'package:app_training/packages/features/map/blocs/cubit/search_cubit.dart';
 import 'package:app_training/packages/features/map/blocs/location/location_bloc.dart';
 import 'package:app_training/packages/features/map/blocs/map/map_cubit.dart';
 import 'package:app_training/packages/features/map/pages/map_page.dart';
@@ -46,6 +47,9 @@ class LoadingPage extends StatelessWidget {
                   ),
                   BlocProvider(
                     create: (context) => MapCubit(),
+                  ),
+                  BlocProvider(
+                    create: (context) => SearchCubit(),
                   ),
                 ],
                 child: const MapPage(),
