@@ -1,5 +1,10 @@
+//actuallizar
+
 import 'package:app_training/packages/core/ui/colors.dart';
 import 'package:app_training/packages/features/map/blocs/cubit/search_cubit.dart';
+import 'package:app_training/packages/features/map/blocs/location/location_bloc.dart';
+import 'package:app_training/packages/features/map/blocs/map/map_cubit.dart';
+import 'package:app_training/packages/features/map/widgets/route_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,7 +13,11 @@ class ManualMarker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SearchCubit, SearchState>(
+    final searchCubit = context.read<SearchCubit>();
+    return BlocConsumer<SearchCubit, SearchState>(
+      listenWhen: (previous, current) =>
+          previous.isLoading != current.isLoading,
+      listener: _listenerState,
       builder: (context, state) {
         if (!state.showManualMarker) return const SizedBox();
         return Stack(
@@ -17,7 +26,9 @@ class ManualMarker extends StatelessWidget {
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    searchCubit.updateShowManualMarker(false);
+                  },
                   icon: Icon(
                     Icons.arrow_back_ios,
                     color: AppColors.primary,
@@ -26,10 +37,13 @@ class ManualMarker extends StatelessWidget {
               ),
             ),
             Center(
-              child: Icon(
-                Icons.location_on_rounded,
-                size: 48,
-                color: AppColors.primary,
+              child: Transform.translate(
+                offset: const Offset(0, -22),
+                child: Icon(
+                  Icons.location_on_rounded,
+                  size: 48,
+                  color: AppColors.primary,
+                ),
               ),
             ),
             Align(
@@ -40,7 +54,16 @@ class ManualMarker extends StatelessWidget {
                   horizontal: 32,
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    final start =
+                        context.read<LocationBloc>().state.lastKnownLocation;
+                    if (start == null) return;
+
+                    final end = context.read<MapCubit>().mapCenter;
+                    if (end == null) return;
+                    searchCubit.getRoute(start, end);
+                    searchCubit.updateShowManualMarker(false);
+                  },
                   child: const Text('Confirmar'),
                 ),
               ),
@@ -49,5 +72,17 @@ class ManualMarker extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _listenerState(BuildContext context, SearchState state) {
+    if (state.route != null && state.route!.points != null) {
+      context.read<MapCubit>().addRoutePolyline(state.route!);
+    }
+
+    if (state.isLoading) {
+      showLoadingMessage(context);
+    } else {
+      Navigator.maybePop(context);
+    }
   }
 }

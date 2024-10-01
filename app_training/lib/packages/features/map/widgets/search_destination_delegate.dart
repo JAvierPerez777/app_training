@@ -1,6 +1,9 @@
 import 'package:app_training/packages/core/ui/colors.dart';
+import 'package:app_training/packages/features/map/blocs/cubit/search_cubit.dart';
+import 'package:app_training/packages/features/map/blocs/location/location_bloc.dart';
 import 'package:app_training/packages/features/map/models/search_result.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchDestionationDelegate extends SearchDelegate<SearchResult> {
   @override
@@ -32,7 +35,32 @@ class SearchDestionationDelegate extends SearchDelegate<SearchResult> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return const Text('buildResults');
+    final proximity = context.read<LocationBloc>().state.lastKnownLocation;
+    context.read<SearchCubit>().searchPlaces(proximity!, query);
+    return BlocBuilder<SearchCubit, SearchState>(
+      builder: (context, state) {
+        final places = state.places;
+
+        return ListView.builder(
+          itemCount: places.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(places[index].text ?? ''),
+              subtitle: Text(places[index].placeName ?? ''),
+              leading: Icon(
+                Icons.location_on_outlined,
+                color: AppColors.primary,
+              ),
+              onTap: () {
+                final searchResult = SearchResult(
+                    cancel: false, manual: false, place: places[index]);
+                close(context, searchResult);
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   @override

@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import 'package:app_training/packages/core/ui/map_style.dart';
+import 'package:app_training/packages/core/ui/ui.dart';
 import 'package:app_training/packages/features/map/blocs/location/location_bloc.dart';
 import 'package:app_training/packages/features/map/blocs/map/map_cubit.dart';
-import 'package:app_training/packages/features/map/widgets/floating_actions.dart';
-import 'package:app_training/packages/features/map/widgets/manual_marker.dart';
-import 'package:app_training/packages/features/map/widgets/search_bar_info.dart';
+import 'package:app_training/packages/features/map/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -20,7 +18,7 @@ class MapPage extends StatelessWidget {
       body: BlocConsumer<LocationBloc, LocationState>(
         listener: (context, state) {
           if (state.lastKnownLocation != null) {
-            mapCubit.moveCamera(state.lastKnownLocation!);
+            // mapCubit.moveCamera(state.lastKnownLocation!);
           }
 
           if (state.myLocationHistory.isNotEmpty) {
@@ -71,8 +69,12 @@ class MapPage extends StatelessWidget {
                       zoom: 18,
                     ),
                     polylines: polylines.values.toSet(),
+                    markers: mapState.markers.values.toSet(),
                     onMapCreated: (controller) =>
                         mapCubit.onMapInitialized(controller),
+                    onCameraMove: (cameraPosition) {
+                      mapCubit.mapCenter = cameraPosition.target;
+                    },
                   ),
                   const SearchBarInfo(),
                   const ManualMarker(),

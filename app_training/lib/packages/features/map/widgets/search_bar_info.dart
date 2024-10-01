@@ -1,7 +1,10 @@
 import 'package:app_training/packages/core/ui/colors.dart';
 import 'package:app_training/packages/features/map/blocs/cubit/search_cubit.dart';
+import 'package:app_training/packages/features/map/blocs/location/location_bloc.dart';
+import 'package:app_training/packages/features/map/models/search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'widgets.dart';
 
@@ -52,12 +55,8 @@ class SearchIcon extends StatelessWidget {
               context: context,
               delegate: SearchDestionationDelegate(),
             );
-
-            if (result?.cancel == true) return;
-
-            if (result?.manual == true) {
-              context.read<SearchCubit>().updateShowManualMarker();
-            }
+            if (result == null) return;
+            onSearchResult(context, result);
           },
           icon: Icon(
             Icons.search,
@@ -66,5 +65,22 @@ class SearchIcon extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void onSearchResult(BuildContext context, SearchResult result) {
+    if (result.cancel == true) return;
+
+    if (result.manual == true) {
+      context.read<SearchCubit>().updateShowManualMarker(true);
+    }
+    if (result.place != null) {
+      final start = context.read<LocationBloc>().state.lastKnownLocation;
+      if (start == null) return;
+      final place = result.place;
+      final end = LatLng(place?.center![1] ?? 0.0, place?.center![0] ?? 0.0);
+
+      context.read<SearchCubit>().getRoute(start, end);
+      context.read<SearchCubit>().updateShowManualMarker(false);
+    }
   }
 }
